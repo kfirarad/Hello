@@ -8,6 +8,6 @@
   }
 
   .testresult-item {
-    @apply p-2 flex flex-row text-center text-xl;
+    @apply flex flex-row text-center text-xl;
   }
 }

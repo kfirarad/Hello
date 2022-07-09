@@ -6,18 +6,29 @@ export default function TestResults(props: { results: TestResult[] }) {
     const testResultLabel = (testResult: TestResultEvalaution) => {
         switch (testResult) {
             case TestResultEvalaution.GOOD:
-                return <span className="bg-green-300">Good</span>;
+                return 'Good!';
             case TestResultEvalaution.BAD:
-                return <span className="bg-red-300">Bad</span>;
+                return 'Bad!';
             default:
-                return <span className="bg-yellow-300">Unknown</span>;
+                return 'Unknown';
+        }
+    }
+
+    const resultClassName = (testResult: TestResultEvalaution) => {
+        switch (testResult) {
+            case TestResultEvalaution.GOOD:
+                return 'bg-green-300';
+            case TestResultEvalaution.BAD:
+                return 'bg-red-300';
+            default:
+                return 'bg-yellow-300';
         }
     }
 
 
     return (<ul className="flex flex-col bg-sky-200 p-4 w-full lg:w-1/2">
         {results.map(result =>
-        (<li key={result.key} className="testresult-item">
+        (<li key={result.key} className={`testresult-item ${resultClassName(result.testResultEvaluation)}`}>
             <div className="w-1/2">{result.testName} </div>
             <div className="w-1/2">{testResultLabel(result.testResultEvaluation)}</div>
         </li>))}

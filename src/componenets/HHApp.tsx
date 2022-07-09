@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Form from "./Form";
 import TestResults from "./TestResults";
 import { TestResult, TestResultEvalaution } from '../types';
+import { findBestMatch } from "string-similarity";
 
 const dataset = {
   "bloodTestConfig": [
@@ -24,8 +25,11 @@ export default function HHApp() {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
   const detectTestByName = (inputTestName: string): string => {
-    const datasetTest = dataset.bloodTestConfig.find(test => test.name.toLowerCase() === inputTestName.toLowerCase());
-    return datasetTest?.name || inputTestName;
+    const { bestMatchIndex, bestMatch: { rating } } = findBestMatch(inputTestName.toLowerCase(), dataset.bloodTestConfig.map(test => test.name.toLowerCase()));
+    console.log(bestMatchIndex, rating);
+    if (rating >= 0.1) {
+      return dataset.bloodTestConfig[bestMatchIndex].name;
+    } else { return inputTestName }
   };
 
   const evaluateTestResult = (testName: string, inputTestResult: number): TestResultEvalaution => {
@@ -37,40 +41,22 @@ export default function HHApp() {
   }
 
   const addTestResult = (inputTestName: string, inputTestResult: number): void => {
+    if (inputTestName.trim() === '' || isNaN(inputTestResult)) {
+      throw Error('invalid input');
+    }
     const testName = detectTestByName(inputTestName);
     const testResultEvaluation = evaluateTestResult(testName, inputTestResult);
     const newTestResult: TestResult = { testName, testResultEvaluation, key: Date.now() };
     setTestResults([...testResults, newTestResult]);
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      testName: { value: string | null };
-      testResult: { value: number | null };
-    };
-
-    const testName = target.testName.value;
-    const testResult = target.testResult.value;
-    if (testName && testResult) {
-      try {
-        addTestResult(testName, testResult);
-        target.testName.value = null;
-        target.testResult.value = null;
-      }
-      catch (e) {
-        console.log(e);
-
-      }
-
-
-    }
-  }
-
   return (
-    <div className='flex flex-col lg:flex-row'>
-      <Form handleSubmit={handleSubmit} />
-      <TestResults results={testResults} />
+    <div>
+      <div className='flex flex-col lg:flex-row'>
+        <Form addTestResult={addTestResult} />
+        {testResults.length > 0 && <TestResults results={testResults} />}
+      </div>
+      {testResults.length > 0 && <button onClick={() => { setTestResults([]) }} className="m-10 w-auto bg-red-300 hover:bg-red-500 text-gray-100 font-bold py-2 px-4 rounded">Reset</button>}
     </div>
   );
 }
