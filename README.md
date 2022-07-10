@@ -10,7 +10,14 @@ In order to support fuzyness for the testname field, I used [string-similarity](
 Also used [tailwind-css](https://tailwindcss.com/) for styling.
 
 ## In order to run
-Simply `npm install` and `npm start`
+Run the follwiing commands:
+* `npm install`
+* Run Dev Server
+ + `npm run dev`
+* OR Run a produciton server
+ + `npm run build`
+ + `npm start`
+
 both backend and frontnd will be available in http://localhost:3000
 
 ## DB

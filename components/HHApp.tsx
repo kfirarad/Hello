@@ -40,7 +40,7 @@ export default function HHApp() {
         body:
           JSON.stringify({
             testName: inputTestName,
-            testResult: inputT
+            testResult: inputTestResult
           }),
 
       });
