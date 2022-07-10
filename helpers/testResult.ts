@@ -4,7 +4,6 @@ import dataset from '../dataset.json'
 
 const detectTestByName = (inputTestName: string): string => {
     const { bestMatchIndex, bestMatch: { rating } } = findBestMatch(inputTestName.toLowerCase(), dataset.bloodTestConfig.map(test => test.name.toLowerCase()));
-    console.log(bestMatchIndex, rating);
     if (rating >= 0.1) {
         return dataset.bloodTestConfig[bestMatchIndex].name;
     } else { return inputTestName }
